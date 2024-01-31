@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+
+<title>Introduction to carbondate</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+<style type="text/css">
+
+div.csl-bib-body { }
+div.csl-entry {
+clear: both;
+}
+.hanging div.csl-entry {
+margin-left:2em;
+text-indent:-2em;
+}
+div.csl-left-margin {
+min-width:2em;
+float:left;
+}
+div.csl-right-inline {
+margin-left:2em;
+padding-left:1em;
+}
+div.csl-indent {
+margin-left: 2em;
+}
+</style>
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Introduction to carbondate</h1>
+
+
+
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(carbondate)</span></code></pre></div>
+<div id="introduction" class="section level1">
+<h1>Introduction</h1>
+<p>The <strong>carbondate</strong> package contains functions for
+analysing sets of related radiocarbon (<sup>14</sup>C) determinations.
+Suppose we have a set of <span class="math inline">\(N\)</span>
+archaeological samples, each of which has a <sup>14</sup>C determination
+<span class="math inline">\(X_i\)</span>. Furthermore, suppose that
+these samples are known to be related to one another (for example,
+arising from a particular site, or set of sites, populated by a
+particular culture). We want to estimate the calendar ages of these
+samples <strong>and</strong> investigate changes/variations in the
+(calendar age) frequency at which the samples arose (as a potential
+proxy for activity, population size, …):</p>
+<div class="figure">
+<img src="data:image/png;base64,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" alt="_Illustration of our challenge. We observe a set of related samples, each with a ^14^C determination (shown here as the red ticks on the radiocarbon age axis). Can we jointly calibrate the samples, and summarise the combined calendar age information that they provide?_" width="100%" />
+<p class="caption">
+<em>Illustration of our challenge. We observe a set of related samples,
+each with a <sup>14</sup>C determination (shown here as the red ticks on
+the radiocarbon age axis). Can we jointly calibrate the samples, and
+summarise the combined calendar age information that they provide?</em>
+</p>
+</div>
+<p>Each sample has an unknown calendar age <span class="math inline">\(\theta_i\)</span> (for <span class="math inline">\(i = 1, \ldots, N\)</span>). Since they are
+related, the set of calendar ages <span class="math inline">\(\theta_1,
+\ldots, \theta_n\)</span> for the samples are assumed to arise from the
+same shared, and unknown, calendar age density <span class="math inline">\(f(\theta)\)</span>. However, we don’t observe the
+true calendar ages of the samples: only the <sup>14</sup>C
+determinations <span class="math inline">\(X_1, \ldots, X_n\)</span>.
+Due to fluctuations in past radiocarbon levels, these <sup>14</sup>C
+determinations need to be calibrated (converted) in order to be
+understood on the calendar age scale and obtain estimates for each <span class="math inline">\(\theta_i\)</span>. This calibration must be done
+simultaneously with the summarisation, introducing additional complexity
+into the overall process.</p>
+<p>This library serves two purposes:</p>
+<ul>
+<li>calibration of the set of <sup>14</sup>C determinations, i.e., the
+calendar age estimation of the <span class="math inline">\(\theta_i\)</span>, can be improved significantly
+by incorporating the knowledge that the samples are related;</li>
+<li>summarisation of the underlying calendar age distribution from which
+the samples arise, i.e., estimating <span class="math inline">\(f(\theta)\)</span>, provides a potentially useful
+proxy for activity, population size, the frequency of past events, …
+This concept uses the principle of <em>dates-as-data</em> <span class="citation">(Rick 1987)</span></li>
+</ul>
+<p>We provide two distinct, albeit ideologically linked, approaches to
+achieve this:</p>
+<ul>
+<li><code>PolyaUrnBivarDirichlet()</code> and
+<code>WalkerBivarDirichlet()</code> — A non-parametric Bayesian density
+estimation approach using a Dirichlet process mixture model (DPMM)
+implemented via two different Markov Chain Monte Carlo (MCMC) algorithms
+<span class="citation">(Heaton 2022)</span>. This is a
+statistically-rigorous alternative to summed probability distributions
+(SPDs) and kernel density estimates (KDE models).</li>
+<li><code>PPcalibrate()</code> — A inhomogeneous Poisson
+process/Changepoint approach using Reversible Jump Markov Chain Monte
+Carlo (RJ-MCMC) to estimate the changing rate at which the
+<sup>14</sup>C samples occur over calendar time.</li>
+</ul>
+<p>Separate vignettes are provided to describe each approach. Which
+approach is more appropriate to apply will be situation dependent, and
+will be determined by the nature of the underlying shared calendar age
+distribution <span class="math inline">\(f(\theta)\)</span>:</p>
+<ul>
+<li>Can the set of potential samples (the population) be well
+approximated by a mixture of, potentially overlapping, clusters? In
+which case <code>PolyaUrnBivarDirichlet()</code> or
+<code>WalkerBivarDirichlet()</code> are likely most suitable.</li>
+<li>Or is it more likely that the occurrence of samples is characterised
+by distinct calendar times when the rate at which those samples arise
+changes? In which case <code>PPcalibrate()</code> will be more
+appropriate.</li>
+</ul>
+<div id="dates-as-data-frequency-of-samples-as-a-proxy-for-activity" class="section level2">
+<h2>Dates-as-Data – Frequency of samples as a proxy for activity</h2>
+<p>A commonly-used approach to estimate changes in the frequency of past
+events or the size of populations looks at variations in the rate of
+archaeological and environmental samples (e.g., charcoal from fires,
+human/animal bones, or other evidence of occupation) found at a site
+over time. Time periods with large numbers of samples suggest increased
+activity, while those with few samples indicate a reduced level of
+activity. This paradigm is known as <em>dates-as-data</em> <span class="citation">(Rick 1987)</span>.</p>
+<p>The reliability of such a <em>dates-as-data</em> approach is highly
+dependent upon our ability to estimate the calendar ages of the
+discoveries. Most archaeological/environmental dates are obtained using
+radiocarbon. The need for calibration of these <sup>14</sup>C samples
+introduces considerable uncertainties in the resultant calendar ages and
+complicates the use of <em>dates-as-data</em>, making it more
+challenging to identify variations in the calendar year density/rates at
+which samples occur.</p>
+<p>In this library, we provide two theoretically-underpinned approaches
+to overcome these challenges, each of which has its own set of
+vignettes:</p>
+<ul>
+<li>A statistically-rigorous alternative to summed probability
+distributions (SPDs) that models the samples as arising from a mixture
+distribution containing an unknown number of distinct clusters <span class="citation">(Heaton 2022)</span>. <a href="Non-parametric-summed-density.html">Non-parametric summed density
+estimation vignette</a> ;<br />
+</li>
+<li>A changepoint-based approach that models the occurrence of the
+<sup>14</sup>C samples as an inhomogeneous Poisson process. We aim to
+reconstruct how the rate at which the samples occur varies over calendar
+time, and to identify if there are statistically significant
+changepoints (i.e., specific calendar times at which the rate of samples
+changes abruptly). <a href="Poisson-process-modelling.html">Poisson
+process modelling vignette</a></li>
+</ul>
+<div id="strengths-and-weaknesses-of-dates-as-data" class="section level3">
+<h3>Strengths and Weaknesses of Dates-as-Data</h3>
+<p>Used appropriately, dates-as-data approaches allow users to borrow
+strength from more data and hence to identify longer-term trends and
+less-obvious effects that are not possible with smaller sets of data.
+This has the potential to provide greater insight into mechanisms and
+processes. However, like any scientific tool, they must not be used
+uncritically, or treated as a black-box.</p>
+<p>In particular, the reliability of any dates-as-data inference will
+depend hugely upon the representativeness, or otherwise, of the
+underlying sampling. Two particular considerations which must be taken
+into account are:</p>
+<ul>
+<li>Potential for Taphonomic Loss — that certain kinds of samples are
+more/less likely to remain in the archaeological record (e.g., due to
+preservation) or that fewer older samples will remain. One can
+(probably) deal with this if can provide the likelihood of loss of
+different objects/periods. This library does not however currently
+address this.</li>
+<li>Extent of (non)-representativeness of the underlying sampling — the
+underlying model assumes that each sample is representative of the
+overall population/activity. Using sets of <sup>14</sup>C data that are
+dominated by large studies that only looked at particular time periods,
+or particular materials/samples, are unlikely to provide reliable
+representation of an overall population.</li>
+</ul>
+<p>One must always consider what the sample you are wishing to summarise
+represents.</p>
+</div>
+</div>
+<div id="data-requirements" class="section level2">
+<h2>Data Requirements</h2>
+<p>The (most-automated) version of the library only requires two
+vectors:</p>
+<ul>
+<li>The <sup>14</sup>C determinations <span class="math inline">\(X_i\)</span>: <code>rc_determinations</code></li>
+<li>The accompanying (lab-reported) measurement uncertainties <span class="math inline">\(\sigma_{i,\textrm{lab}}\)</span>:
+<code>rc_sigmas</code></li>
+</ul>
+<p><strong>Note:</strong> These values can either be provided as
+<sup>14</sup>C ages, or as F<sup>14</sup>C concentrations (setting the
+flag <code>F14C_inputs = FALSE</code> or <code>TRUE</code>
+accordingly).</p>
+<p>All other model parameters will be adaptively chosen based upon
+these. More experienced users (with external independent information)
+may however wish to manually set some of the other parameters (see the
+help files for further information).</p>
+</div>
+<div id="additional-information" class="section level2">
+<h2>Additional Information</h2>
+<p>The library also provides some joint data (which can be used by
+either method) as described below</p>
+</div>
+<div id="calibration-curve" class="section level2">
+<h2>Calibration Curve</h2>
+<p>A calibration curve is a mapping providing, for an object of true
+calendar age <span class="math inline">\(\theta\)</span>, the
+corresponding radiocarbon age <span class="math inline">\(\mu(\theta)\)</span>. Estimates of such
+calibration curves are created using reference material for which we
+have both <sup>14</sup>C measurements and independently-known (or
+estimated) calendar ages. The radiocarbon determination of any
+individual sample is assumed to be a noisy observation of the
+calibration curve, i.e., <span class="math display">\[
+X_i \sim N(\mu(\theta_i), \sigma_{i,\textrm{lab}}^2)
+\]</span></p>
+<p>Given a undated object for which we obtain a <sup>14</sup>C
+determination one can estimate its calendar age by inverting this
+mapping. A calibration curve is a required input for all the functions
+in this package.</p>
+<p>The internationally-ratified standard for the radiocarbon calibration
+curve is known as IntCal, for which regular updates are provided by the
+IntCal working group:</p>
+<ul>
+<li>IntCal20 <span class="citation">(Reimer et al. 2020)</span> is the
+current version agreed for use by the community for calibrating samples
+that obtain their <sup>14</sup>C from the Northern Hemispheric
+atmosphere.</li>
+<li>SHCal20 <span class="citation">(Hogg et al. 2020)</span> is the
+current version when calibrating atmospheric samples from the Southern
+Hemisphere.</li>
+</ul>
+<p>These products provides pointwise estimates of the mean <span class="math inline">\(m(\theta)\)</span> and sd <span class="math inline">\(\rho(\theta)\)</span> of the relevant (NH or SH)
+calibration curve, which can be integrated out during calibration,
+i.e.,: <span class="math display">\[\begin{align*}
+\mu(\theta) | \theta &amp; \sim N(m(\theta), \rho(\theta)^2), \textrm{
+and} \\
+\Rightarrow X_i &amp; \sim N(m(\theta_i), \rho(\theta_i)^2 +
+\sigma_{i,\textrm{lab}}^2)
+\end{align*}\]</span></p>
+<p>The curve data <code>intcal20</code> and <code>shcal20</code> are
+provided in this package. However it is possible to load and use another
+calibration curve if you wish.</p>
+</div>
+<div id="example-data" class="section level2">
+<h2>Example Data</h2>
+<p>There are some example <sup>14</sup>C data sets provided in the
+package, each of which contain a number of radiocarbon determinations
+and uncertainties from real-life cases:</p>
+<ul>
+<li><p><code>kerr</code>: 255 radiocarbon determinations collated by
+<span class="citation">Kerr and McCormick (2014)</span> related to the
+building and use of raths in Ireland.</p></li>
+<li><p><code>armit</code>: 2021 radiocarbon determinations collated by
+<span class="citation">Armit et al. (2014)</span> from archaeological
+groups operating in Ireland, to investigate whether a wetter environment
+around 2700 cal yr BP led to a population collapse.</p></li>
+<li><p><code>buchanan</code>: 628 radiocarbon determinations collated by
+<span class="citation">Buchanan, Collard, and Edinborough (2008)</span>
+representing the ages of distinct archaeological sites found across
+Canada and North America during the time of the palaeoindians.</p></li>
+<li><p><code>alces</code>, <code>bison</code>, <code>cervus</code>,
+<code>equus</code>, <code>human</code>, <code>mammuthus</code>:
+radiocarbon determinations related to a variety of megafauna (and
+humans) from Yukon and Alaska <span class="citation">(Dale Guthrie
+2006)</span>. Samples are restricted to those between 25,000–6000
+<sup>14</sup>C yrs BP.</p></li>
+</ul>
+</div>
+<div id="package-user-guide" class="section level2">
+<h2>Package User Guide</h2>
+<p>For those new to calibration we provide the introductory
+vignettes:</p>
+<ul>
+<li><a href="Independent_calibration.html">Independent and Joint
+Calibration of Radiocarbon Samples</a></li>
+<li><a href="Against_SPDs.html">Why not to Use SPDs</a></li>
+</ul>
+<p>To learn more about the functions (and methods) in the library, look
+at:</p>
+<ul>
+<li><a href="Non-parametric-summed-density.html">Rigorous Bayesian
+non-parametric alternative to SPDs</a></li>
+<li><a href="Poisson-process-modelling.html">Variable-Rate Poisson
+Process estimation and Changepoint Identification</a></li>
+</ul>
+<p>These pages provide more details on the methods, and simple examples
+of their usage.</p>
+</div>
+</div>
+<div id="references" class="section level1 unnumbered">
+<h1 class="unnumbered">References</h1>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-armit2014" class="csl-entry">
+Armit, Ian, Graeme T. Swindles, Katharina Becker, Gill Plunkett, and
+Maarten Blaauw. 2014. <span>“Rapid Climate Change Did Not Cause
+Population Collapse at the End of the European Bronze Age.”</span>
+<em>Proceedings of the National Academy of Sciences</em> 111 (48):
+17045–49. <a href="https://doi.org/10.1073/pnas.1408028111">https://doi.org/10.1073/pnas.1408028111</a>.
+</div>
+<div id="ref-buchanan2008" class="csl-entry">
+Buchanan, Briggs, Mark Collard, and Kevan Edinborough. 2008.
+<span>“Paleoindian Demography and the Extraterrestrial Impact
+Hypothesis.”</span> <em>Proceedings of the National Academy of
+Sciences</em> 105 (33): 11651–54. <a href="https://doi.org/10.1073/pnas.0803762105">https://doi.org/10.1073/pnas.0803762105</a>.
+</div>
+<div id="ref-guthrie2006" class="csl-entry">
+Dale Guthrie, R. 2006. <span>“<span>New Carbon Dates Link Climatic
+Change with Human Colonization and Pleistocene
+Extinctions</span>.”</span> <em>Nature</em> 441: 207–9. <a href="https://doi.org/10.1038/nature04604">https://doi.org/10.1038/nature04604</a>.
+</div>
+<div id="ref-heaton2021" class="csl-entry">
+Heaton, Timothy J. 2022. <span>“<span class="nocase">Non-parametric
+Calibration of Multiple Related Radiocarbon Determinations and their
+Calendar Age Summarisation</span>.”</span> <em>Journal of the Royal
+Statistical Society Series C: Applied Statistics</em> 71 (5): 1918–56.
+<a href="https://doi.org/10.1111/rssc.12599">https://doi.org/10.1111/rssc.12599</a>.
+</div>
+<div id="ref-hogg2020" class="csl-entry">
+Hogg, Alan G, Timothy J Heaton, Quan Hua, Jonathan G Palmer, Chris SM
+Turney, John Southon, Alex Bayliss, et al. 2020. <span>“SHCal20 Southern
+Hemisphere Calibration, 0<span></span>55,000 Years Cal BP.”</span>
+<em>Radiocarbon</em> 62 (4): 759–78. <a href="https://doi.org/10.1017/RDC.2020.59">https://doi.org/10.1017/RDC.2020.59</a>.
+</div>
+<div id="ref-kerr2014" class="csl-entry">
+Kerr, T. R., and F. McCormick. 2014. <span>“Statistics, Sunspots and
+Settlement: Influences on Sum of Probability Curves.”</span> <em>Journal
+of Archaeological Science</em> 41 (January): 493–501. <a href="https://doi.org/10.1016/j.jas.2013.09.002">https://doi.org/10.1016/j.jas.2013.09.002</a>.
+</div>
+<div id="ref-reimer2020" class="csl-entry">
+Reimer, Paula J, William E N Austin, Edouard Bard, Alex Bayliss, Paul G
+Blackwell, Christopher Bronk Ramsey, Martin Butzin, et al. 2020.
+<span>“The IntCal20 Northern Hemisphere Radiocarbon Age Calibration
+Curve (0<span></span>55 Cal kBP).”</span> <em>Radiocarbon</em> 62 (4):
+725–57. <a href="https://doi.org/10.1017/rdc.2020.41">https://doi.org/10.1017/rdc.2020.41</a>.
+</div>
+<div id="ref-rick1987" class="csl-entry">
+Rick, John W. 1987. <span>“Dates as Data: An Examination of the Peruvian
+Preceramic Radiocarbon Record.”</span> <em>American Antiquity</em> 52
+(1): 55–73. <a href="https://www.cambridge.org/core/journals/american-antiquity/article/abs/dates-as-data-an-examination-of-the-peruvian-preceramic-radiocarbon-record/01A2247C02E83426761D922297442C36">https://www.cambridge.org/core/journals/american-antiquity/article/abs/dates-as-data-an-examination-of-the-peruvian-preceramic-radiocarbon-record/01A2247C02E83426761D922297442C36</a>.
+</div>
+</div>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
