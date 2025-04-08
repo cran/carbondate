@@ -101,6 +101,11 @@ densities <- PlotPredictiveCalendarAgeDensity(
   output_data = list(polya_urn_output, walker_output),
   denscale = 2.5)
 
+# The mean (and default 2sigma intervals) are stored in densities
+head(densities[[1]]) # The Polya Urn estimate
+
+head(densities[[2]]) # The Walker estimate
+
 ## ----plot_density_2, out.width="100%"-----------------------------------------
 densities <- PlotPredictiveCalendarAgeDensity(
   output_data = polya_urn_output,
@@ -109,6 +114,8 @@ densities <- PlotPredictiveCalendarAgeDensity(
   interval_width = "bespoke",
   bespoke_probability = 0.8,
   plot_14C_age = FALSE)
+
+head(densities[[1]])
 
 ## ----plot_individual, out.width="100%"----------------------------------------
 PlotCalendarAgeDensityIndividualSample(21, polya_urn_output)

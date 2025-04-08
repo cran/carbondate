@@ -1,6 +1,6 @@
 Package: carbondate
 Title: Calibration and Summarisation of Radiocarbon Dates
-Version: 1.0.1
+Version: 1.1.0
 Authors@R: c(
     person("Timothy J", "Heaton", , "T.Heaton@leeds.ac.uk", role = c("aut", "cre", "cph"),
            comment = c(ORCID = "0000-0002-9994-142X")),
@@ -21,12 +21,12 @@ URL: https://github.com/TJHeaton/carbondate,
 BugReports: https://github.com/TJHeaton/carbondate/issues
 VignetteBuilder: knitr
 LinkingTo: cpp11
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.2
 NeedsCompilation: yes
-Packaged: 2024-01-29 15:40:58 UTC; timjh
+Packaged: 2025-04-08 00:34:56 UTC; timjh
 Author: Timothy J Heaton [aut, cre, cph]
     (<https://orcid.org/0000-0002-9994-142X>),
   Sara Al-assam [aut, cph] (<https://orcid.org/0000-0001-7280-6802>)
 Maintainer: Timothy J Heaton <T.Heaton@leeds.ac.uk>
 Repository: CRAN
-Date/Publication: 2024-01-31 19:40:02 UTC
+Date/Publication: 2025-04-08 02:20:02 UTC

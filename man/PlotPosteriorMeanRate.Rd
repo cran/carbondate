@@ -7,6 +7,7 @@
 PlotPosteriorMeanRate(
   output_data,
   n_posterior_samples = 5000,
+  n_changes = NULL,
   calibration_curve = NULL,
   plot_14C_age = TRUE,
   plot_cal_age_scale = "BP",
@@ -18,7 +19,8 @@ PlotPosteriorMeanRate(
   resolution = 1,
   n_burn = NA,
   n_end = NA,
-  plot_pretty = TRUE
+  plot_pretty = TRUE,
+  plot_lwd = 2
 )
 }
 \arguments{
@@ -30,6 +32,10 @@ named \code{label} which is used to set the label on the plot legend.}
 from the (thinned) MCMC realisations stored in \code{output_data} to estimate the
 rate \eqn{\lambda(t)}. These samples may be repeats if the number of, post burn-in,
 realisations is less than \code{n_posterior_samples}. If not given, 5000 is used.}
+
+\item{n_changes}{(Optional) If wish to condition calculation of the posterior mean on
+the number of internal changepoints. In this function, if specified, \code{n_changes} must
+be a single integer.}
 
 \item{calibration_curve}{This is usually not required since the name of the
 calibration curve variable is saved in the output data. However, if the
@@ -82,6 +88,9 @@ total number of iterations performed, i.e. \code{n_iter}, if not given.}
 \item{plot_pretty}{logical, defaulting to \code{TRUE}. If set \code{TRUE} then will select pretty plotting
 margins (that create sufficient space for axis titles and rotates y-axis labels). If \code{FALSE} will
 implement current user values.}
+
+\item{plot_lwd}{The line width to use when plotting the posterior mean (and confidence intervals).
+Default is 2 (to add emphasis).}
 }
 \value{
 A list, each item containing a data frame of the \code{calendar_age_BP}, the \code{rate_mean}
@@ -96,6 +105,10 @@ rate \eqn{\lambda(t)}) together with specified probability intervals, on a given
 Will show the original set of radiocarbon determinations (those you are modelling/summarising),
 the chosen calibration curve, and the estimated posterior rate of occurrence \eqn{\lambda(t)} on the same plot.
 Can also optionally show the posterior mean of each individual sample's calendar age estimate.
+
+An option is also provided to calculate the posterior mean rate \emph{conditional}
+upon the number of internal changepoints within the period under study (if this is specified as an input
+to the function).
 
 \strong{Note:} If all you are interested in is the value of the posterior mean rate
 on a grid, without an accompanying plot, you can use
@@ -119,9 +132,20 @@ pp_output <- PPcalibrate(
 # Default plot with 2 sigma interval
 PlotPosteriorMeanRate(pp_output, n_posterior_samples = 100)
 
+# Decrease the line width of the posterior mean
+PlotPosteriorMeanRate(pp_output, n_posterior_samples = 100, plot_lwd = 1)
+
 # Specify an 80\% confidence interval
 PlotPosteriorMeanRate(
     pp_output,
+    interval_width = "bespoke",
+    bespoke_probability = 0.8,
+    n_posterior_samples = 100)
+
+# Plot the posterior rate conditional on 2 internal changes
+PlotPosteriorMeanRate(
+    pp_output,
+    n_changes = 2,
     interval_width = "bespoke",
     bespoke_probability = 0.8,
     n_posterior_samples = 100)

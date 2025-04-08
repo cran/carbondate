@@ -142,16 +142,38 @@ PP_fit_output <- PPcalibrate(
     show_progress = FALSE)
 
 ## ----meanrate, out.width="100%"-----------------------------------------------
-PlotPosteriorMeanRate(PP_fit_output)
+# Run plotting function and assign output to PP_posterior_mean_rate_2sigma
+PP_posterior_mean_rate_2sigma <- PlotPosteriorMeanRate(PP_fit_output)
+# Note: You can change the PP line widths using the plot_lwd argument 
+
+# Look at PP_posterior_mean_rate_2sigma (posterior mean and 2 sigma intervals) 
+head(PP_posterior_mean_rate_2sigma)
+
+
+## ----no_assign_meanrate, eval = FALSE-----------------------------------------
+# # Run plotting function
+# PlotPosteriorMeanRate(PP_fit_output)
+
+## ----assign_meanrate, out.width="100%", fig.show='hide'-----------------------
+# Run plotting function and assign output to PP_posterior_mean_rate_2sigma
+PP_posterior_mean_rate_2sigma <- PlotPosteriorMeanRate(PP_fit_output)
+# Will also recreate plot above (but not shown in vignette)
+
+# Look at PP_posterior_mean_rate_2sigma (posterior mean and 2 sigma intervals) 
+head(PP_posterior_mean_rate_2sigma)
 
 ## ----changepoint_number, out.width="100%"-------------------------------------
 PlotNumberOfInternalChanges(PP_fit_output)
 
 ## ----changepoint_locations, out.width="100%"----------------------------------
 PlotPosteriorChangePoints(PP_fit_output)
+# Can add an n_changes argument, e.g., n_changes = c(2, 3, 4)
+# if want to condition on a different number of changes 
 
 ## ----changepoint_rates, out.width="100%"--------------------------------------
 PlotPosteriorHeights(PP_fit_output)
+# As above can add an n_changes argument, e.g., n_changes = c(2, 3, 4)
+# if want to condition on a different number of changes 
 
 ## ----PP_plot_individual, out.width="100%"-------------------------------------
 PlotCalendarAgeDensityIndividualSample(
@@ -160,4 +182,35 @@ PlotCalendarAgeDensityIndividualSample(
 ## ----changepoint_locations_AD, out.width="100%"-------------------------------
 PlotPosteriorChangePoints(PP_fit_output, 
                           plot_cal_age_scale = "AD")
+
+## ----find_meanrate, out.width="100%"------------------------------------------
+# Calculating 2 sigma (95.4%) intervals on posterior mean occurrence rate 
+PP_posterior_mean_rate_2sigma <- FindPosteriorMeanRate(
+  PP_fit_output,
+  calendar_age_sequence = seq(300, 500, by = 1),
+  interval_width = "2sigma")
+
+# Look at posterior mean with 2 sigma probability interval
+head(PP_posterior_mean_rate_2sigma)
+
+## ----plot_conditionalmeanrate, out.width="100%"-------------------------------
+# Conditional on TWO internal changes in the occurrence rate, 
+# Calculate and plot the posterior mean rate over time 
+# (with its 2 sigma intervals)
+conditional_2_changes_posterior_mean_rate <- PlotPosteriorMeanRate(
+  PP_fit_output,
+  n_changes = 2) # here n_changes must have length one (i.e., a single number)
+
+# Look at conditional posterior mean with 2 sigma probability interval
+head(conditional_2_changes_posterior_mean_rate)
+
+## ----plot_ind_realisation, out.width="100%"-----------------------------------
+# Choose some nice plotting colours (from Okabe-Ito)
+realisation_colours <- c("#000000", "#E69F00", "#56B4E9", "#009E73", "#F0E442" )
+
+# Plot 5 random realisations from posterior
+PlotRateIndividualRealisation(
+     PP_fit_output,
+     n_realisations = 5,
+     plot_realisations_colour = realisation_colours)
 
